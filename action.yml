@@ -1,5 +1,5 @@
 # action.yml
-name: 'Docker Run Action'
+name: 'Podman Run Action'
 description: 'Run a command in a new container'
 inputs:
   image:
@@ -24,10 +24,24 @@ inputs:
   password:
     description: 'Password'
     required: false
-  docker_network:
-    description: 'Docker Network ID'
+  podman_network:
+    description: 'Podman Network ID'
     default: ${{ job.container.network }}
     required: false
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: 'composite'
+  steps:
+    - name: Set environment
+      run: |
+        echo "INPUT_USERNAME=${{ inputs.username }}" >> "$GITHUB_ENV"
+        echo "INPUT_PASSWORD=${{ inputs.password }}" >> "$GITHUB_ENV"
+        echo "INPUT_IMAGE=${{ inputs.image }}" >> "$GITHUB_ENV"
+        echo "INPUT_PODMAN_NETWORK=${{ inputs.podman_network }}" >> "$GITHUB_ENV"
+        echo "INPUT_RUN=${{ inputs.run }}" >> "$GITHUB_ENV"
+        echo "INPUT_SHELL=${{ inputs.shell }}" >> "$GITHUB_ENV"
+        echo "INPUT_REGISTRY=${{ inputs.registry }}" >> "$GITHUB_ENV"
+        echo "INPUT_OPTIONS=${{ inputs.options }}" >> "$GITHUB_ENV"
+
+      shell: bash
+    - run: bash ${GITHUB_ACTION_PATH}/entrypoint.sh
+      shell: bash
