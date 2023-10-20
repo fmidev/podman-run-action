@@ -1,8 +1,9 @@
-# Docker Run Action
+# Podman Run Action
 
-- run a specific step in docker.
+- forked from https://github.com/addnab/docker-run-action
+- run a specific step in podman.
 - run an image built by a previous step.
-- See https://github.com/addnab/docker-run-action/blob/main/action.yml for all the available inputs.
+- See https://github.com/fmidev/podman-run-action/blob/main/action.yml for all the available inputs.
 
 ## Examples
 
@@ -11,10 +12,10 @@
 ```yaml
 - name: Checkout 
   uses: actions/checkout@v2 # Required to mount the Github Workspace to a volume 
-- uses: addnab/docker-run-action@v3
+- uses: fmidev/podman-run-action@v1
   with:
-    username: ${{ secrets.DOCKER_USERNAME }}
-    password: ${{ secrets.DOCKER_PASSWORD }}
+    username: ${{ secrets.PODMAN_USERNAME }}
+    password: ${{ secrets.PODMAN_PASSWORD }}
     registry: gcr.io
     image: private-image:latest
     options: -v ${{ github.workspace }}:/work -e ABC=123
@@ -25,10 +26,10 @@
 
 #### run a privately-owned image
 ```yaml
-- uses: addnab/docker-run-action@v3
+- uses: fmidev/podman-run-action@v1
   with:
-    username: ${{ secrets.DOCKER_USERNAME }}
-    password: ${{ secrets.DOCKER_PASSWORD }}
+    username: ${{ secrets.PODMAN_USERNAME }}
+    password: ${{ secrets.PODMAN_PASSWORD }}
     registry: gcr.io
     image: test-image:latest
     run: echo "hello world"
@@ -36,11 +37,11 @@
 
 #### run an image built by a previous step
 ```yaml
-- uses: docker/build-push-action@v2
+- uses: podman/build-push-action@v2
   with:
     tags: test-image:latest
     push: false
-- uses: addnab/docker-run-action@v3
+- uses: fmidev/podman-run-action@v1
   with:
     image: test-image:latest
     run: echo "hello world"
@@ -50,9 +51,9 @@
 #### use a specific shell (default: sh). 
 *Note: The shell must be installed in the container*
 ```yaml
-- uses: addnab/docker-run-action@v3
+- uses: fmidev/podman-run-action@v1
   with:
-    image: docker:latest
+    image: podman:latest
     shell: bash
     run: |
       echo "first line"
